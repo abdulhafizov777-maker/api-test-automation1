@@ -1,0 +1,4 @@
+endpoint,expectedStatus
+/get,200
+/ip,200
+/uuid,200
