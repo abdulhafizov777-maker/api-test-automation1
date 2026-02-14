@@ -9,18 +9,28 @@ class DdtApiTest {
 
     @BeforeAll
     static void setup() {
-        RestAssured.baseURI = "https://httpbin.org";
+        RestAssured.baseURI = "https://petstore.swagger.io/v2";
     }
 
     @ParameterizedTest
     @CsvFileSource(resources = "/testdata/requests.csv", numLinesToSkip = 1)
-    void get_endpoints_ddt(String endpoint, int expectedStatus) {
+    void api_ddt(String method,
+                 String endpoint,
+                 int expectedStatus,
+                 String body) {
 
-        given()
-                .header("User-Agent", "Mozilla/5.0")
+        var request = given()
                 .header("Accept", "application/json")
+                .header("Content-Type", "application/json");
+
+        // agar body bo‘lsa qo‘shamiz
+        if (body != null && !body.isBlank()) {
+            request.body(body);
+        }
+
+        request
                 .when()
-                .get(endpoint)
+                .request(method, endpoint)
                 .then()
                 .statusCode(expectedStatus);
     }
